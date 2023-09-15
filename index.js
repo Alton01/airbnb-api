@@ -23,15 +23,13 @@ const bcryptSalt = bcrypt.genSaltSync(10);
 app.use(express.json());
 app.use(cookieParser());
 app.use('/uploads', express.static(__dirname+'/uploads'));
-app.use(cors());
+app.use(cors({
+    
+    origin: 'https://houseapp.onrender.com',
+    credentials: true,
+    optionSuccessStatus: 200
+}));
 
-router.get("/", (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "https://houseapp.onrender.com")
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader("Access-Control-Max-Age", "1800");
-    res.setHeader("Access-Control-Allow-Headers", "content-type");
-    res.setHeader( "Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, PATCH, OPTIONS" ); 
-     });
 
 mongoose.connect(process.env.MONGO_URL);
 
