@@ -38,6 +38,8 @@ mongoose.connect(process.env.MONGO_URL);
 // FUNCTION FOR VERIFYING A USER'S TOKEN 
 
 function getUserDataFromReq(req) {
+    mongoose.connect(process.env.MONGO_URL);
+
     return new Promise((resolve,reject) => {
         jwt.verify(req.cookies.token, process.env.JWT_SECRET, {}, async (err, userData) => {
             if (err) throw err;
@@ -55,6 +57,8 @@ app.get('/test', (req,res) => {
 //FOR REGISTERING A USER
 
 app.post('/register', async (req,res) => {
+    mongoose.connect(process.env.MONGO_URL);
+
     const {name,email,password} = req.body;
 
     try {
@@ -74,6 +78,8 @@ app.post('/register', async (req,res) => {
 //FOR LOGIN IN A USER
 
 app.post ('/login', async (req,res) => {
+    mongoose.connect(process.env.MONGO_URL);
+
     const {email,password} = req.body;
     const userDoc = await User.findOne({email});
 
@@ -97,6 +103,7 @@ app.post ('/login', async (req,res) => {
 //TO GET PROFILE OF LOGGED IN USER
 
 app.get('/profile', (req,res) => {
+    mongoose.connect(process.env.MONGO_URL);
     const {token} = req.cookies;
     if (token) {
         jwt.verify(token, process.env.JWT_SECRET, {}, async (err, userData) => {
@@ -150,6 +157,8 @@ app.post('/upload', photosMiddleware.array('photos', 100), (req,res) => {
 //TO CREATE A NEW PLACE
 
 app.post('/places', (req,res) => {
+    mongoose.connect(process.env.MONGO_URL);
+
     const {token} = req.cookies;
 
     const {
@@ -172,6 +181,8 @@ app.post('/places', (req,res) => {
 //TO GET PLACES CREATED BY A PARTICULAR USER
 
 app.get('/user-places', (req,res) => {
+    mongoose.connect(process.env.MONGO_URL);
+
     const {token} = req.cookies;  
     jwt.verify(token, process.env.JWT_SECRET, {}, async (err, userData) => {
         const {id} = userData;
@@ -183,6 +194,8 @@ app.get('/user-places', (req,res) => {
 // THIS IS TO ENABLE PRINT OUT OF ORIGINAL DETAILS OF A PLACE.
 
 app.get('/places/:id', async (req,res) => {
+    mongoose.connect(process.env.MONGO_URL);
+
     const {id} = req.params;
     res.json(await Place.findById(id) )
 })
@@ -190,6 +203,8 @@ app.get('/places/:id', async (req,res) => {
 //THIS IS TO ENABLE EDIT FUNCTIONALITY FOR A USER TO BE ABLE TO EDIT THE PLACES THEY ADDED AND SAVE IT
 
 app.put('/places/', async (req,res) => {
+    mongoose.connect(process.env.MONGO_URL);
+
     const {token} = req.cookies;
 
     const {
@@ -215,6 +230,8 @@ app.put('/places/', async (req,res) => {
 // THIS IS TO ENABLE THE PRINT OUT OF ALL THE REGISTERED PLACES ON THIS PLATFORM ON INDEX/HOME PAGE
 
 app.get('/places', async (req,res) => {
+    mongoose.connect(process.env.MONGO_URL);
+
     res.json(await Place.find());
 });
 
@@ -222,6 +239,8 @@ app.get('/places', async (req,res) => {
 //FOR BOOKING FUNCTIONALITY CREATION FOR WHEN A USER MAKES A BOOKING
 
 app.post('/bookings', async (req,res) => {
+    mongoose.connect(process.env.MONGO_URL);
+
     const userData = await getUserDataFromReq(req)
     const {place,checkIn,checkOut,numberOfGuests,name,phone,price,} = req.body;
    Booking.create({
@@ -236,6 +255,8 @@ app.post('/bookings', async (req,res) => {
 
 
 app.get('/bookings', async (req,res) => {
+    mongoose.connect(process.env.MONGO_URL);
+
    const userData = await getUserDataFromReq(req);
    res.json( await Booking.find({user:userData.id}).populate('place') );
 });
