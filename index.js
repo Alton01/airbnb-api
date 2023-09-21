@@ -27,6 +27,7 @@ app.use(cors({
     
     origin: 'https://houseapp.onrender.com',
     credentials: true,
+    methods: [ "GET", "POST", "PUT"],
     optionSuccessStatus: 200
 }));
 
